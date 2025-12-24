@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import Ingredient
 
 User = get_user_model()
 
@@ -19,3 +20,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             last_name=validated_data.get('last_name', '')
         )
         return user
+
+class IngredientSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Ingredient model.
+    """
+    # We add a read-only field to show the username of the creator
+    created_by_username = serializers.CharField(source='created_by.username', read_only=True)
+
+    class Meta:
+        model = Ingredient
+        # List the fields we want in our API responses
+        fields = ['id', 'name', 'description', 'created_by', 'created_by_username']
+        # We'll set the 'created_by' field automatically in the view
+        read_only_fields = ['created_by', 'created_by_username']
