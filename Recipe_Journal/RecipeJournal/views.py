@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import viewsets, status
-from .serializers import UserRegistrationSerializer, IngredientSerializer
-from .models import Ingredient
+from .serializers import UserRegistrationSerializer, IngredientSerializer, RecipeSerializer, RecipeIngredientSerializer
+from .models import Ingredient, Recipe, RecipeIngredient
 import requests
 
 
@@ -71,3 +71,30 @@ class IngredientViewSet(viewsets.ModelViewSet):
     }
 
         return Response(mock_data, status=status.HTTP_200_OK)
+
+class RecipeViewSet(viewsets.ModelViewSet):
+    serializer_class = RecipeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Only return recipes for the logged-in user
+        return Recipe.objects.filter(created_by=self.request.user)
+
+    def perform_create(self, serializer):
+        # Automatically link recipe to logged-in user
+        serializer.save(created_by=self.request.user)
+
+class RecipeIngredientViewSet(viewsets.ModelViewSet):
+    serializer_class = RecipeIngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Only allow access to ingredients in recipes belonging to logged-in user
+        return RecipeIngredient.objects.filter(recipe__created_by=self.request.user)
+
+    def perform_create(self, serializer):
+        # Optional: validate that the recipe belongs to the logged-in user
+        recipe = serializer.validated_data['recipe']
+        if recipe.created_by != self.request.user:
+            raise PermissionError("You cannot add ingredients to someone else's recipe")
+        serializer.save()        

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import Ingredient
+from .models import Ingredient, Recipe
 
 User = get_user_model()
 
@@ -34,3 +34,19 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'created_by', 'created_by_username']
         # We'll set the 'created_by' field automatically in the view
         read_only_fields = ['created_by', 'created_by_username']
+
+class RecipeSerializer(serializers.ModelSerializer):
+    created_by_username = serializers.CharField(source='created_by.username', read_only=True)
+
+    class Meta:
+        model = Recipe
+        fields = ['id', 'title', 'description', 'created_by', 'created_by_username', 'created_at', 'updated_at']
+        read_only_fields = ['created_by', 'created_by_username', 'created_at', 'updated_at']
+
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    ingredient_name = serializers.CharField(source='ingredient.name', read_only=True)
+    recipe_title = serializers.CharField(source='recipe.title', read_only=True)
+
+    class Meta:
+        model = RecipeIngredient
+        fields = ['id', 'recipe', 'recipe_title', 'ingredient', 'ingredient_name', 'quantity', 'unit']

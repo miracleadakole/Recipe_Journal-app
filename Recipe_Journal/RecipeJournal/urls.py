@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter 
-from .views import welcome_user, SignupView, IngredientViewSet
+from .views import welcome_user, SignupView, IngredientViewSet, RecipeViewSet, RecipeIngredientViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -8,6 +8,8 @@ from rest_framework_simplejwt.views import (
 
 router = DefaultRouter()
 router.register(r'ingredients', IngredientViewSet, basename='ingredient')
+router.register(r'recipes', RecipeViewSet, basename='recipe')
+router.register(r'recipe-ingredients', RecipeIngredientViewSet, basename='recipeingredient')
 
 urlpatterns = [
     path('Welcome/', welcome_user),
