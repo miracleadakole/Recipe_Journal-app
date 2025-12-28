@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 from .serializers import UserRegistrationSerializer, IngredientSerializer, RecipeSerializer, RecipeIngredientSerializer
 from .models import Ingredient, Recipe, RecipeIngredient
+from rest_framework.exceptions import PermissionDenied, ValidationError
 import requests
 
 
@@ -95,6 +96,26 @@ class RecipeIngredientViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # Optional: validate that the recipe belongs to the logged-in user
         recipe = serializer.validated_data['recipe']
+        if recipe is None:
+            raise ValidationError("Recipe field is required.")
+
+        # Ensure the recipe belongs to current user
         if recipe.created_by != self.request.user:
-            raise PermissionError("You cannot add ingredients to someone else's recipe")
-        serializer.save()        
+            raise PermissionDenied(
+                "You cannot add ingredients to someone else's recipe."
+            )
+
+        serializer.save()
+
+
+
+
+
+
+
+
+
+
+
+
+        

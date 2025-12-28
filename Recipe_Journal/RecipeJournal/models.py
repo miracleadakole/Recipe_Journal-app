@@ -37,9 +37,9 @@ class Recipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     ingredients = models.ManyToManyField(
-    'Ingredient',
-    through='RecipeIngredient',
-    related_name='recipes'
+        'Ingredient',
+        through='RecipeIngredient',
+        related_name='recipes'
     )
 
 
