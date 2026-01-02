@@ -1,5 +1,5 @@
 import requests
-from django.conf import settings  # 👈 THIS IS WHERE IT GOES
+from django.conf import settings  
 
 EDAMAM_BASE_URL = "https://api.edamam.com/api/food-database/v2/parser"
 
