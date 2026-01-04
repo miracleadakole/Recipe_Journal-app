@@ -42,10 +42,9 @@ pip install -r requirements.txt
 
 
 Set up .env file
-
 # .env file
 EDAMAM_APP_ID=<edamam-app-id>
-EDAMAM_APP_KEY=<edamam-api-key>
+EDAMAM_APP_KEY=<edamam-app-key>
 
 Apply migrations:
 python manage.py migrate
@@ -59,33 +58,29 @@ Server will start at http://127.0.0.1:8000/.
 
 Authentication Flow
 
-Signup
+~ Signup
 
 Endpoint: POST /api/signup/
-
 Body:
-
 {
   "username": "your_username",
   "email": "your_email@example.com",
   "password": "your_password"
 }
 
-
-Login / Get JWT Token
+~ Login / Get JWT Token
 
 Endpoint: POST /api/token/
-
 Body:
-
 {
   "username": "your_username",
   "password": "your_password"
+  "email": "your_email@example.com"
+  "first_name": "your_firstname"
+  "last_name": "your_lastname"
 }
 
-
 Response:
-
 {
   "refresh": "<refresh_token>",
   "access": "<access_token>"
