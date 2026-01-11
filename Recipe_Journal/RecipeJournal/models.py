@@ -52,7 +52,7 @@ class Recipe(models.Model):
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='recipe_ingredients')
     ingredient = models.ForeignKey('Ingredient', on_delete=models.CASCADE)
-    quantity = models.CharField(default=1, help_text="Quantity of ingredient")
+    quantity = models.FloatField(default=1, help_text="Quantity of ingredient")
     unit = models.CharField(max_length=50, blank=True, help_text="Unit of measurement, e.g., grams, cups")
 
     class Meta:
